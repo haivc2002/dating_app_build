@@ -1,0 +1,94 @@
+import 'dart:ui';
+
+import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+
+import '../common/scale_screen.dart';
+
+class BottomSheetCustom {
+  final Widget? child;
+  final Color? backgroundColor;
+  final double? height;
+  const BottomSheetCustom({
+    Key? key,
+    this.child,
+    this.backgroundColor,
+    this.height,
+  });
+
+  static void showCustomBottomSheet(BuildContext context, Widget child, {double? height,double? circular, Color? backgroundColor, Function? whenComplete, double? blur, bool? showKeyboard = false}) {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      builder: (context) {
+        return Stack(
+          children: [
+            BackdropFilter(
+              filter: ImageFilter.blur(sigmaY: 3, sigmaX: 3),
+              child: Container(),
+            ),
+            Column(
+              children: [
+                Expanded(
+                  child: GestureDetector(
+                    onTap: () => Navigator.pop(context),
+                    child: Container(color: Colors.transparent),
+                  ),
+                ),
+                IntrinsicHeight(
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.vertical(top: Radius.circular(circular ?? 20.w)),
+                    child: Stack(
+                      children: [
+                        SizedBox(
+                          height: height,
+                          child: ClipRect(
+                            child: BackdropFilter(
+                              filter: ImageFilter.blur(sigmaY: blur ?? 30, sigmaX: blur ?? 30),
+                              child: Container(),
+                            ),
+                          ),
+                        ),
+                        Container(
+                          color: backgroundColor,
+                          height: height,
+                          width: widthScreen(context),
+                          child: SingleChildScrollView(
+                            padding: showKeyboard! ? EdgeInsets.only(
+                              bottom: MediaQuery.of(context).viewInsets.bottom
+                            ) : null,
+                            child: Column(
+                              mainAxisSize: MainAxisSize.min, // Make column shrink to fit content
+                              children: [
+                                Container(
+                                  height: 5.h,
+                                  width: 50.w,
+                                  margin: EdgeInsets.symmetric(vertical: 10.h),
+                                  decoration: BoxDecoration(
+                                    color: Colors.white.withOpacity(0.5),
+                                    borderRadius: BorderRadius.circular(100),
+                                  ),
+                                ),
+                                child,  // Directly include the child
+                                SizedBox(height: 20.w),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ],
+        );
+      },
+    ).then((_) => whenComplete?.call());
+  }
+
+}
+
+
+
