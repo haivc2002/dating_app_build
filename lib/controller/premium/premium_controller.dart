@@ -21,7 +21,9 @@ class PremiumController with PremiumBinding {
 
   void getUrlPayment() => getUrlPaymentBinding();
 
-  void lifecycleState(AppLifecycleState state) => lifecycleStateBinding(state);
+  void lifecycleState(AppLifecycleState state, setState) => lifecycleStateBinding(state, setState);
 
   void toDetailEnigmatic(SuccessPremiumState state, int index) => toDetailEnigmaticBiding(state, index);
+
+  void initEffectPremium(TickerProvider vsync)=> initEffectPremiumBinding(vsync);
 }

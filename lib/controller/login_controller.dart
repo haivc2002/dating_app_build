@@ -32,7 +32,6 @@ class LoginController {
 
   void popupLogin() {
     BottomSheetCustom.showCustomBottomSheet(context,
-      showKeyboard: true,
       backgroundColor: ThemeColor.whiteIos.withOpacity(0.3),
       Padding(
         padding: EdgeInsets.symmetric(horizontal: 20.w),

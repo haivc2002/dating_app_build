@@ -27,12 +27,12 @@ class PremiumScreen extends StatefulWidget {
   State<PremiumScreen> createState() => _PremiumScreenState();
 }
 
-class _PremiumScreenState extends State<PremiumScreen> with WidgetsBindingObserver {
+class _PremiumScreenState extends State<PremiumScreen> with WidgetsBindingObserver, SingleTickerProviderStateMixin {
 
   late PremiumController controller;
 
   @override
-  void didChangeAppLifecycleState(AppLifecycleState state) => controller.lifecycleState(state);
+  void didChangeAppLifecycleState(AppLifecycleState state) => controller.lifecycleState(state, setState);
 
   @override
   void initState() {
@@ -40,6 +40,7 @@ class _PremiumScreenState extends State<PremiumScreen> with WidgetsBindingObserv
     controller = PremiumController(context);
     controller.getEnigmatic();
     WidgetsBinding.instance.addObserver(this);
+    controller.initEffectPremium(this);
   }
 
   @override
@@ -51,33 +52,35 @@ class _PremiumScreenState extends State<PremiumScreen> with WidgetsBindingObserv
   @override
   Widget build(BuildContext context) {
     final themeNotifier = Provider.of<ThemeNotifier>(context);
-    return Scaffold(
-      backgroundColor: themeNotifier.systemTheme,
-      body: AppBarCustom(
-        title: 'Premium',
-        textStyle: TextStyles.defaultStyle.bold.appbarTitle,
-        bodyListWidget: [
-          BlocBuilder<PremiumBloc, PremiumState>(
-            builder: (context, state) {
-              if(state is LoadPremiumState) {
-                return StateScreen.wait(context);
-              } else if (state is SuccessPremiumState) {
-                return Stack(
-                  children: [
-                    _screenIsOK(state, themeNotifier),
-                    ElevatedButton(
-                      onPressed: () {},
-                      child: Text('data')
-                    )
-                  ],
-                );
-              } else {
-                return StateScreen.error(context);
-              }
-            },
-          )
-        ],
-      ),
+    return Stack(
+      alignment: Alignment.center,
+      children: [
+        AnimatedScale(
+          duration: Duration(milliseconds: controller.durationDefault),
+          scale: controller.scaleValue,
+          child: Scaffold(
+            backgroundColor: themeNotifier.systemTheme,
+            body: AppBarCustom(
+              title: 'Premium',
+              textStyle: TextStyles.defaultStyle.bold.appbarTitle,
+              bodyListWidget: [
+                BlocBuilder<PremiumBloc, PremiumState>(
+                  builder: (context, state) {
+                    if(state is LoadPremiumState) {
+                      return StateScreen.wait(context);
+                    } else if (state is SuccessPremiumState) {
+                      return _screenIsOK(state, themeNotifier);
+                    } else {
+                      return StateScreen.error(context);
+                    }
+                  },
+                )
+              ],
+            ),
+          ),
+        ),
+        _premiumEffect()
+      ],
     );
   }
 
@@ -119,15 +122,16 @@ class _PremiumScreenState extends State<PremiumScreen> with WidgetsBindingObserv
         child: Stack(
           alignment: Alignment.bottomCenter,
           children: [
-            Hero(tag: 0, child: SizedBox(
+            SizedBox(
                 width: double.infinity,
+                height: double.infinity,
                 child: CachedNetworkImage(
                   imageUrl: "${state.resEnigmatic?[index].listImage?[0].image}",
                   progressIndicatorBuilder: (context, url, progress) => ColoredBox(color: themeNotifier.systemTheme),
                   errorWidget: (context, url, error) => const SizedBox(),
                   fit: BoxFit.cover,
                 )
-            )),
+            ),
             Container(
               width: double.infinity,
               decoration: BoxDecoration(
@@ -229,7 +233,25 @@ class _PremiumScreenState extends State<PremiumScreen> with WidgetsBindingObserv
     );
   }
 
-  _isPremiumEffect() {
-
+  _premiumEffect() {
+    return Visibility(
+      visible: controller.isVisible,
+      child: AnimatedBuilder(
+        animation: controller.blurAnimation,
+        builder: (context, child) {
+          final double opacity = (controller.blurAnimation.value / 50).clamp(0.0, 1.0);
+          return BackdropFilter(
+            filter: ImageFilter.blur(sigmaY: controller.blurAnimation.value, sigmaX: controller.blurAnimation.value),
+            child: ColoredBox(
+              color: ThemeColor.whiteColor.withOpacity(opacity),
+              child: SizedBox(
+                height: heightScreen(context),
+                width: widthScreen(context),
+              ),
+            ),
+          );
+        }
+      ),
+    );
   }
 }

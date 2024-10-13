@@ -17,6 +17,7 @@ class Api {
   static String getListPairing = 'http${ThemeConfig.baseUrlIp}match/listPairing';
   static String getListUnmatchedUsers = 'http${ThemeConfig.baseUrlIp}match/listUnmatchedUsers';
   static String outsideViewMessage = 'http${ThemeConfig.baseUrlIp}message/outsideViewMessage';
+  static String checkPayment = 'http${ThemeConfig.baseUrlIp}payment/checkPayment';
 
   // TODO: PUT
   static String updateLocation = 'http${ThemeConfig.baseUrlIp}update/updateLocation';

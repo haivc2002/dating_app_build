@@ -1,4 +1,5 @@
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -66,9 +67,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   children: [
                     SizedBox(height: 50.w),
                     Hero(tag: 'keyAVT',
-                        child: CircleAvatar(
-                          radius: 80.w,
-                          backgroundImage: NetworkImage('${homeState.info?.listImage?[0].image}'),
+                        child: ClipOval(
+                          child: CachedNetworkImage(
+                            imageUrl: '${homeState.info?.listImage?[0].image}',
+                            progressIndicatorBuilder: (context, url, progress) => const SizedBox(),
+                            errorWidget: (context, url, error) => Image.asset(ThemeImage.avatarNone),
+                            fit: BoxFit.cover,
+                            height: 160.w,
+                            width: 160.w,
+                          ),
                         )
                     ),
                     Expanded(child: Center(

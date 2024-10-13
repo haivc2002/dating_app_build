@@ -318,86 +318,89 @@ class EditProfileController {
     context.read<HomeBloc>().add(HomeEvent(info: UpdateModel.modelInfoUser));
   }
 
-  void onOption(ListImage imageView, int index, int idImage) {
+  void onOption(ListImage imageView, int index, int? idImage) {
     AccessPhotoGallery gallery = AccessPhotoGallery(context);
     double size = 150.w;
     BottomSheetCustom.showCustomBottomSheet(
-      height: 350.w,
-      blur: 0,
+      height: 350.w, blur: 0,
       backgroundColor: Colors.transparent,
       context,
       Padding(
         padding: EdgeInsets.symmetric(horizontal: 10.w),
-        child: Column(
-          children: [
-            Expanded(
-              child: Stack(
-                children: [
-                  Center(child: ClipRRect(
-                    borderRadius: BorderRadius.circular(10.w),
-                    child: SizedBox(
-                      height: size+30,
-                      width: widthScreen(context),
-                      child: ImageFiltered(
-                        imageFilter: ImageFilter.blur(sigmaY: 15, sigmaX: 15),
-                        child: ItemPhoto(
-                          size: size,
-                          backgroundUpload: imageView.image,
+        child: SizedBox(
+          height: 300.w,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Expanded(
+                child: Stack(
+                  children: [
+                    Center(child: ClipRRect(
+                      borderRadius: BorderRadius.circular(10.w),
+                      child: SizedBox(
+                        height: size+30,
+                        width: widthScreen(context),
+                        child: ImageFiltered(
+                          imageFilter: ImageFilter.blur(sigmaY: 15, sigmaX: 15),
+                          child: ItemPhoto(
+                            size: size,
+                            backgroundUpload: imageView.image,
+                          ),
+                        ),
+                      ),
+                    )),
+                    Center(
+                      child: SizedBox(
+                        height: size+30,
+                        width: widthScreen(context),
+                        child: DecoratedBox(
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(10.w),
+                            color: ThemeColor.whiteColor.withOpacity(0.2)
+                          )
                         ),
                       ),
                     ),
-                  )),
-                  Center(
-                    child: SizedBox(
-                      height: size+30,
-                      width: widthScreen(context),
-                      child: DecoratedBox(
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(10.w),
-                          color: ThemeColor.whiteColor.withOpacity(0.2)
-                        )
+                    Center(
+                      child: ItemPhoto(
+                        size: size,
+                        backgroundUpload: imageView.image,
                       ),
                     ),
-                  ),
-                  Center(
-                    child: ItemPhoto(
-                      size: size,
-                      backgroundUpload: imageView.image,
-                    ),
-                  ),
-                ],
+                  ],
+                ),
               ),
-            ),
-            DecoratedBox(
-              decoration: BoxDecoration(
-                  color: ThemeColor.whiteIos,
-                  borderRadius: BorderRadius.vertical(top: Radius.circular(10.w))
+              DecoratedBox(
+                decoration: BoxDecoration(
+                    color: ThemeColor.whiteIos,
+                    borderRadius: BorderRadius.vertical(top: Radius.circular(10.w))
+                ),
+                child: ListTile(
+                    title: const Text('Replace', style: TextStyle(color: ThemeColor.blueColor)),
+                    leading: const Icon(Icons.edit, color: ThemeColor.blueColor),
+                    onTap: () {
+                      gallery.updateImage(index);
+                      Navigator.pop(context);
+                    }
+                ),
               ),
-              child: ListTile(
-                  title: const Text('Replace', style: TextStyle(color: ThemeColor.blueColor)),
-                  leading: const Icon(Icons.edit, color: ThemeColor.blueColor),
-                  onTap: () {
-                    gallery.updateImage(index);
-                    Navigator.pop(context);
-                  }
+              ColoredBox(
+                color: ThemeColor.whiteIos.withOpacity(0.9),
+                child: SizedBox(height: 1, width: widthScreen(context)),
               ),
-            ),
-            ColoredBox(
-              color: ThemeColor.whiteIos.withOpacity(0.9),
-              child: SizedBox(height: 1, width: widthScreen(context)),
-            ),
-            DecoratedBox(
-              decoration: BoxDecoration(
-                  color: ThemeColor.whiteIos,
-                  borderRadius: BorderRadius.vertical(bottom: Radius.circular(10.w))
-              ),
-              child: ListTile(
-                title: const Text('Delete', style: TextStyle(color: ThemeColor.redColor)),
-                leading: const Icon(Icons.delete_forever_rounded, color: ThemeColor.redColor),
-                onTap: ()=> gallery.deleteImage(index, idImage),
-              ),
-            )
-          ],
+              DecoratedBox(
+                decoration: BoxDecoration(
+                    color: ThemeColor.whiteIos,
+                    borderRadius: BorderRadius.vertical(bottom: Radius.circular(10.w))
+                ),
+                child: ListTile(
+                  title: const Text('Delete', style: TextStyle(color: ThemeColor.redColor)),
+                  leading: const Icon(Icons.delete_forever_rounded, color: ThemeColor.redColor),
+                  onTap: () => gallery.deleteImage(index, idImage),
+                ),
+              )
+            ],
+          ),
         ),
       )
     );

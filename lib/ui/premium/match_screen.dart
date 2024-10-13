@@ -24,7 +24,7 @@ class MatchScreen extends StatefulWidget {
   State<MatchScreen> createState() => _MatchScreenState();
 }
 
-class _MatchScreenState extends State<MatchScreen> with TickerProviderStateMixin{
+class _MatchScreenState extends State<MatchScreen> with TickerProviderStateMixin {
 
   late PremiumController controller;
 

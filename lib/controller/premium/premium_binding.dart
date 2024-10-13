@@ -1,4 +1,5 @@
 import 'package:dating_build/argument_model/argument_match.dart';
+import 'package:dating_build/bloc/bloc_home/home_bloc.dart';
 import 'package:dating_build/bloc/bloc_message/detail_message_bloc.dart';
 import 'package:dating_build/bloc/bloc_premium/premium_bloc.dart';
 import 'package:dating_build/common/global.dart';
@@ -22,6 +23,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:intl/intl.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../argument_model/arguments_detail_model.dart';
@@ -39,6 +41,14 @@ mixin PremiumBinding {
   ServiceUpdate serviceUpdate = ServiceUpdate();
   ServicePayment servicePayment = ServicePayment();
   int idUser = Global.getInt(ThemeConfig.idUser);
+  late AnimationController controller;
+  late Animation<double> blurAnimation;
+  double scaleValue = 1.0;
+  bool _isScaled = false;
+  bool isVisible = false;
+
+  final durationDefault = 500;
+  bool _openedPaymentURL = false;
 
   // todo: public
 
@@ -164,23 +174,10 @@ mixin PremiumBinding {
     }
   }
 
-  void lifecycleStateBinding(AppLifecycleState state) {
-    switch(state){
-      case AppLifecycleState.resumed:
-        print("app in resumed");
-        break;
-      case AppLifecycleState.inactive:
-        print("app in inactive");
-        break;
-      case AppLifecycleState.paused:
-        print("app in paused");
-        break;
-      case AppLifecycleState.detached:
-        print("app in detached");
-        break;
-      case AppLifecycleState.hidden:
-        print("app in hidden");
-        break;
+  void lifecycleStateBinding(AppLifecycleState state, setState) {
+    if(state == AppLifecycleState.resumed && _openedPaymentURL) {
+      _checkPaymentBinding(setState);
+      _openedPaymentURL = false;
     }
   }
 
@@ -224,14 +221,22 @@ mixin PremiumBinding {
             infoMore: infoMore,
             notFeedback: null
         )
-    ).then((id) => _onMatch(id as int, state, index));
+    ).then((id) {
+      if (id != null) _onMatch(id as int, state, index);
+    });
+  }
+
+  void initEffectPremiumBinding(TickerProvider vsync) {
+    controller = AnimationController(
+      duration: Duration(milliseconds: durationDefault),
+      vsync: vsync,
+    );
+    blurAnimation = Tween<double>(begin: 0, end: 50).animate(controller);
   }
 
   // todo: private
 
-  void _onLoad() {
-    context.read<PremiumBloc>().add(LoadPremiumEvent());
-  }
+  void _onLoad() => context.read<PremiumBloc>().add(LoadPremiumEvent());
 
   void _onSuccess({List<Matches>? matches, List<UnmatchedUsers>? enigmatic, ModelCreatePayment? responsePayment}) {
     if(context.mounted) {
@@ -328,6 +333,7 @@ mixin PremiumBinding {
   void _actionUrlToViewWeb(url) async {
     Navigator.pop(context);
     final action = Uri.parse(url);
+    _openedPaymentURL = true;
     await launchUrl(action);
   }
 
@@ -363,4 +369,69 @@ mixin PremiumBinding {
     }
   }
 
+  void _isPremiumEffect(setState) {
+    setState(() {
+      _isScaled = !_isScaled;
+      scaleValue = _isScaled ? 1.5 : 1.0;
+    });
+    Future.delayed(const Duration(milliseconds: 500), () {
+      _isScaled = !_isScaled;
+      setState(() => scaleValue = 1.0);
+    });
+  }
+
+  void _onVisible(setState) async {
+    setState(()=> isVisible = true);
+    await Future.delayed(Duration(milliseconds: durationDefault*2));
+    setState(()=> isVisible = false);
+  }
+
+  void _checkPaymentBinding(setState) async {
+    final response = await servicePayment.checkPayment(idUser);
+    if(response is Success<String, Exception> && context.mounted) {
+      if(response.value != "Error") {
+        final oldInfo = context.read<HomeBloc>().state.info;
+        info_user.ModelInfoUser newInfo = oldInfo ?? info_user.ModelInfoUser();
+        if(_isPremium(response.value)) {
+          newInfo.info?.deadline = response.value;
+          context.read<HomeBloc>().add(HomeEvent(info: oldInfo));
+          _onVisible(setState);
+          _isPremiumEffect(setState);
+          controller.forward().then((_) {
+            controller.reverse();
+          });
+        }
+      } else {
+        if(context.mounted) {
+          PopupCustom.showPopup(
+            context,
+            content: Text("Payment failed, you have not made payment", style: TextStyles.defaultStyle),
+            listOnPress: [()=> Navigator.pop(context)],
+            listAction: [Text("Ok", style: TextStyles.defaultStyle.bold.setColor(ThemeColor.blueColor))]
+          );
+        }
+      }
+    } else {
+      _onError();
+    }
+  }
+
+  bool _isPremium(String? value) {
+    if (value == null) {
+      return false;
+    }
+
+    try {
+      final DateFormat dateFormat = DateFormat("dd/MM/yyyy HH:mm:ss");
+      DateTime dateValue = dateFormat.parse(value);
+
+      if (dateValue.isAfter(DateTime.now())) {
+        return true;
+      } else {
+        return false;
+      }
+    } catch (e) {
+      return false;
+    }
+  }
 }

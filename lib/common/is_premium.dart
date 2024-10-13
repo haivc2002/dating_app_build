@@ -7,7 +7,6 @@ import '../bloc/bloc_home/home_bloc.dart';
 bool isPremium(BuildContext context) {
   final home = context.read<HomeBloc>().state;
   String? value = home.info?.info?.deadline;
-  print("value $value");
   if (value == null) {
     return false;
   }

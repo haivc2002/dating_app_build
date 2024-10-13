@@ -236,7 +236,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                 backgroundUpload: preparedListImage[0].image,
                                 onTap: ()=> preparedListImage[0].image == null
                                     ? accessPhotoGallery.updateImage(0)
-                                    : controller.onOption(preparedListImage[0], 0, preparedListImage[0].id!)
+                                    : controller.onOption(preparedListImage[0], 0, preparedListImage[0].id)
                               ),
                             ),
                           );
@@ -278,7 +278,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
               backgroundUpload: preparedListImage[index].image,
               onTap: ()=> preparedListImage[index].image == null
                 ? accessPhotoGallery.updateImage(index)
-                : controller.onOption(preparedListImage[index], index, preparedListImage[index].id!)
+                : controller.onOption(preparedListImage[index], index, preparedListImage[index].id)
             ),
           );
         },

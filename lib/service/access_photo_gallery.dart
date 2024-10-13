@@ -2,6 +2,7 @@
 import 'dart:io';
 
 import 'package:dating_build/service/service_update.dart';
+import 'package:dating_build/tool_widget_custom/loading.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -130,12 +131,10 @@ class AccessPhotoGallery {
     if (await _requestPermission(Permission.storage)) {
       final picker = ImagePicker();
       final pickedFile = await picker.pickImage(source: ImageSource.gallery);
-
       if (pickedFile != null) {
         final imageBytes = await pickedFile.readAsBytes();
         final compressedImage = compressImage(imageBytes);
         final compressedFile = File(pickedFile.path)..writeAsBytesSync(compressedImage);
-
         onSuccess(compressedFile, index);
       } else {
         if (context.mounted) {
@@ -153,11 +152,12 @@ class AccessPhotoGallery {
         }
       }
     } else {
+      if(context.mounted) Loading.onLoaded(context);
       onError();
     }
   }
 
-  Future<void> deleteImage(int index, int idImage) async {
+  Future<void> deleteImage(int index, int? idImage) async {
     final state = context.read<HomeBloc>().state;
     List<ListImage> imageUpload = List.from(state.info?.listImage ?? []);
 
@@ -175,8 +175,7 @@ class AccessPhotoGallery {
         state.info!,
         listImage: imageUpload,
       );
-      _deleteImage(idImage);
-
+      if(idImage != null) _deleteImage(idImage);
       if (context.mounted) {
         context.read<HomeBloc>().add(HomeEvent(info: UpdateModel.modelInfoUser));
         Navigator.pop(context);
