@@ -1,10 +1,11 @@
 
+import 'package:dating_build/common/textstyles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../bloc/bloc_all_tap/all_tap_bloc.dart';
-import '../../common/textstyles.dart';
+import 'package:badges/badges.dart' as badges;
 import '../../controller/all_tap_controller.dart';
 import '../../theme/theme_color.dart';
 import '../../theme/theme_icon.dart';
@@ -58,36 +59,13 @@ class BottomBar extends StatelessWidget {
               height: 55.w,
               child: ColoredBox(
                 color: Colors.transparent,
-                child: Stack(
-                  alignment: Alignment.topRight,
-                  children: [
-                    Center(child: child),
-                    (count != 0 && count != null) ? Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        DecoratedBox(
-                          decoration: const BoxDecoration(
-                            color: ThemeColor.redColor,
-                            shape: BoxShape.circle
-                          ),
-                          child: SizedBox(
-                            height: 12.w,
-                            width: 12.w,
-                            child: Center(
-                              child: Text('$count', style: TextStyles
-                                  .defaultStyle
-                                  .bold
-                                  .setColor(ThemeColor.whiteColor)
-                                  .setTextSize(8.sp)
-                              ),
-                            ),
-                          ),
-                        ),
-                        SizedBox(width: 15.w, height: 30.w)
-                      ],
-                    ) : const SizedBox.shrink()
-                  ],
-                ),
+                child: Center(child: badges.Badge(
+                  showBadge: (count == 0 || count == null) ? false : true,
+                  badgeContent: Text(count.toString(), style: TextStyles.defaultStyle
+                      .setColor(ThemeColor.whiteColor).setTextSize(9).bold),
+                  badgeAnimation: const badges.BadgeAnimation.scale(),
+                  child: child
+                )),
               )
           ),
         )

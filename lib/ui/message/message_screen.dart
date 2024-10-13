@@ -29,6 +29,8 @@ class _MessageScreenState extends State<MessageScreen> {
   void initState() {
     super.initState();
     controller = MessageController(context);
+    controller.onLoad();
+    controller.getData();
   }
 
   @override
@@ -40,7 +42,7 @@ class _MessageScreenState extends State<MessageScreen> {
   @override
   Widget build(BuildContext context) {
     final themeNotifier = Provider.of<ThemeNotifier>(context);
-    controller.getData();
+    controller.refreshWithTime();
     return Scaffold(
       backgroundColor: themeNotifier.systemTheme,
       body: BlocBuilder<MessageBloc, MessageState>(

@@ -42,27 +42,29 @@ class MessageController {
   ModelResponseMessage response = ModelResponseMessage();
   TextEditingController content = TextEditingController();
 
-  void getData() {
-    onLoad();
-    int idUser = Global.getInt(ThemeConfig.idUser);
-
+  void refreshWithTime() {
     realTimeMessage?.cancel();
     realTimeMessage = Timer.periodic(const Duration(seconds: 5), (_) async {
-      if(context.mounted) {
-        var response = await serviceMessage.getOutsideView(idUser);
-        if(response is Success<ModelOutsideViewMessage, Exception>) {
-          if(response.value.result == 'Success') {
-            List<Conversations> listData = response.value.conversations ?? [];
-            onSuccess(listData);
-          } else {
-            onError();
-          }
-        } else if (response is Failure<ModelOutsideViewMessage, Exception>) {
-          print(response.exception);
+      getData();
+    });
+  }
+
+  void getData() async {
+    int idUser = Global.getInt(ThemeConfig.idUser);
+    if(context.mounted) {
+      var response = await serviceMessage.getOutsideView(idUser);
+      if(response is Success<ModelOutsideViewMessage, Exception>) {
+        if(response.value.result == 'Success') {
+          List<Conversations> listData = response.value.conversations ?? [];
+          onSuccess(listData);
+        } else {
           onError();
         }
+      } else if (response is Failure<ModelOutsideViewMessage, Exception>) {
+        print(response.exception);
+        onError();
       }
-    });
+    }
   }
 
   void onLoad()=> context.read<MessageBloc>().add(LoadMessageEvent());
