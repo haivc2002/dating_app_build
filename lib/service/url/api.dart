@@ -10,6 +10,7 @@ class Api {
   static String match = 'http${ThemeConfig.baseUrlIp}match/add';
   static String sendMessage = 'http${ThemeConfig.baseUrlIp}message/send';
   static String createPayment = 'http${ThemeConfig.baseUrlIp}payment/create_payment_url';
+  static String logout = 'http${ThemeConfig.baseUrlIp}auth/logout';
 
   // TODO: GET
   static String getNomination = 'http${ThemeConfig.baseUrlIp}data/listNomination';

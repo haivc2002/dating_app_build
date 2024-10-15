@@ -24,7 +24,6 @@ class LoginController {
   LoginController(this.context);
 
   ServiceLogin serviceLogin = ServiceLogin();
-  ModelRequestAuth req = ModelRequestAuth();
 
   final TextEditingController emailController = TextEditingController(text: 'thanhhaivc2002');
   final TextEditingController passController = TextEditingController(text: '123456');
@@ -113,7 +112,10 @@ class LoginController {
   }
 
   void login(String email, String password) async {
-    initModelRequestLogin(email, password);
+    ModelRequestAuth req = ModelRequestAuth(
+        email : email,
+        password: password
+    );
     ModelInfoUser response = await serviceLogin.login(req);
     if(response.result == 'Success') {
       onSuccess(response);
@@ -122,28 +124,23 @@ class LoginController {
     }
   }
 
-  void initModelRequestLogin(String email, String password) {
-    req = ModelRequestAuth(
-      email : email,
-      password: password
-    );
-  }
-
   void onSuccess(ModelInfoUser response) async {
     if (!context.mounted) return;
     Navigator.pop(context);
-    Global.setInt('idUser', response.idUser!);
-
     await Future.delayed(const Duration(milliseconds: 250));
-
     if (context.mounted) {
       if (response.info?.name != null) {
+        Global.setInt('idUser', response.idUser!);
         Navigator.pushNamedAndRemoveUntil(context, AllTapBottomScreen.routeName, (route) => false);
       } else {
         Navigator.pushNamed(
           context,
           RegisterInfoScreen.routeName,
-          arguments: ArgumentRegisterInfo(email: emailController.text, password: passController.text),
+          arguments: ArgumentRegisterInfo(
+              email: emailController.text,
+              password: passController.text,
+              idUser: response.idUser
+          ),
         );
       }
     }

@@ -95,9 +95,9 @@ class _DrawerWidgetState extends State<DrawerWidget> {
                           );
                         } else {
                           return ListTile(
-                            leading: CircleAvatar(
+                            leading: (state.info?.listImage??[]).isNotEmpty ? CircleAvatar(
                               backgroundImage: NetworkImage('${state.info?.listImage?[0].image}'),
-                            ),
+                            ) : const SizedBox(),
                             title: Text(TimeNow.helloDate(), style: TextStyles.defaultStyle.whiteText.setTextSize(16.sp)),
                             subtitle: Text('${state.info?.info?.name}', style: TextStyles
                                 .defaultStyle

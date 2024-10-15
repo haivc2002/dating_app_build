@@ -75,7 +75,7 @@ class RegisterController {
     Navigator.pushReplacementNamed(
       context,
       RegisterInfoScreen.routeName,
-      arguments: ArgumentRegisterInfo(password: passwordController.text, email: emailController.text)
+      arguments: ArgumentRegisterInfo(password: passwordController.text, email: emailController.text, idUser: response.idUser)
     );
   }
 }

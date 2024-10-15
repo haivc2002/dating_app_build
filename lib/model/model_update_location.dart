@@ -1,11 +1,13 @@
 class ModelUpdateLocation {
   int idUser;
   double lat, lon;
+  String token;
 
   ModelUpdateLocation({
     required this.idUser,
     required this.lat,
     required this.lon,
+    required this.token,
   });
 
   Map<String, dynamic> toJson() {
@@ -13,6 +15,7 @@ class ModelUpdateLocation {
       'idUser': idUser,
       'lat': lat,
       'lon': lon,
+      'token': token
     };
   }
   factory ModelUpdateLocation.fromJson(Map<String, dynamic> json) {
@@ -20,6 +23,7 @@ class ModelUpdateLocation {
       idUser: json['idUser'],
       lat: json['lat'],
       lon: json['lon'],
+      token: json['token'],
     );
   }
 }

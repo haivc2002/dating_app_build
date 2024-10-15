@@ -89,6 +89,7 @@ class HomeController {
         idUser: Global.getInt(ThemeConfig.idUser),
         lat: latValue,
         lon: lonValue,
+        token: Global.getString(ThemeConfig.token)
       );
       ModelResUpdateLocation response = await serviceUpdate.updateLocation(requestLocation);
 
@@ -123,7 +124,8 @@ class HomeController {
       ModelListNomination response = await service.listNomination(
         context,
         idUser: Global.getInt(ThemeConfig.idUser),
-        gender: Global.getString(ThemeConfig.gender),
+        gender: Global.getString(ThemeConfig.gender) == ""
+            ? "female" :Global.getString(ThemeConfig.gender),
         radius: rangeValue,
         limit: limit,
         page: page??0

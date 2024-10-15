@@ -12,7 +12,7 @@
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
 
     <application
-        android:label="dating_build"
+        android:label="Dash date"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
 
@@ -34,9 +34,16 @@
                 android:name="com.google.android.geo.API_KEY"
                 android:value="YOUR KEY HERE"/>
 
+<!--            <meta-data-->
+<!--                android:name="com.google.firebase.messaging.default_notification_channel_id"-->
+<!--                android:value="@string/default_notification_channel_id" />-->
+            <meta-data
+                android:name="com.google.firebase.messaging.default_notification_icon"
+                android:resource="@drawable/message_notify" />
+
             <meta-data
                 android:name="com.google.firebase.messaging.default_notification_channel_id"
-                android:value="@string/default_notification_channel_id" />
+                android:value="high_importance_channel" />
 
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>

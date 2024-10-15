@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 
+import 'package:dating_build/service/service_login.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:geolocator/geolocator.dart';
@@ -32,6 +33,7 @@ class AllTapController {
   ApiLocationCurrent apiLocation = ApiLocationCurrent();
   int selectedIndex = 0;
   ServiceInfoUser serviceInfoUser = ServiceInfoUser();
+  ServiceLogin serviceLogin = ServiceLogin();
 
   WebSocketChannel? channel;
   final String urlConnect = Api.notification;
@@ -88,8 +90,12 @@ class AllTapController {
     print('Error!!!!!!');
   }
 
-  void onSignOut() {
-    Global.setInt('idUser', -1);
+  void onSignOut() async {
+    // final response = await serviceLogin.logout(Global.getInt(ThemeConfig.idUser));
+    // if(response.result == "success" && context.mounted) {
+    //   Global.setInt(ThemeConfig.idUser, -1);
+    //   Navigator.pushNamedAndRemoveUntil(context, LoginScreen.routeName, (route) => false);
+    // }
     Navigator.pushNamedAndRemoveUntil(context, LoginScreen.routeName, (route) => false);
   }
 

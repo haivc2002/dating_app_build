@@ -267,18 +267,16 @@ class RegisterMoreController {
   void initModelReqRegisterInfo() {
     final registerBlocState = context.read<RegisterBloc>().state;
     final editBlocState = context.read<EditBloc>().state;
-    final apiRegisterState = context.read<ApiRegisterBloc>().state;
-    if(apiRegisterState is SuccessApiRegisterState) {
-      req = ModelReqRegisterInfo(
-        birthday: registerBlocState.birthdayValue != null ? DateFormat('dd/MM/yyyy').format(registerBlocState.birthdayValue!) : null,
-        name: nameController.text,
-        idUser: apiRegisterState.response?.idUser,
-        gender: registerBlocState.genderValue,
-        desiredState: editBlocState.purposeValue,
-        lon: registerBlocState.lon,
-        lat: registerBlocState.lat,
-      );
-    }
+    final args = ModalRoute.of(context)?.settings.arguments as ArgumentRegisterInfo;
+    req = ModelReqRegisterInfo(
+      birthday: registerBlocState.birthdayValue != null ? DateFormat('dd/MM/yyyy').format(registerBlocState.birthdayValue!) : null,
+      name: nameController.text,
+      idUser: args.idUser,
+      gender: registerBlocState.genderValue,
+      desiredState: editBlocState.purposeValue,
+      lon: registerBlocState.lon,
+      lat: registerBlocState.lat,
+    );
   }
 
   void initModelReqAddImage(int index) {

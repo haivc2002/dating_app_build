@@ -13,6 +13,7 @@ import 'firebase_options.dart';
 import 'multibloc.dart';
 
 final GlobalKey<ScaffoldMessengerState> scaffoldMessengerKey = GlobalKey<ScaffoldMessengerState>();
+final navigatorKey = GlobalKey<NavigatorState>();
 
 void main() async{
   WidgetsFlutterBinding.ensureInitialized();
@@ -48,6 +49,7 @@ class MyApp extends StatelessWidget {
               return MaterialApp(
                 debugShowCheckedModeBanner: false,
                 title: 'First Method',
+                navigatorKey: navigatorKey,
                 scaffoldMessengerKey: scaffoldMessengerKey,
                 onGenerateRoute: AppRouter.generateRoute,
                 home: child,
