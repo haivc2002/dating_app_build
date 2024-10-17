@@ -1,4 +1,7 @@
+import 'dart:ui';
+
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_sign_in/google_sign_in.dart';
@@ -11,7 +14,6 @@ import '../model/model_request_auth.dart';
 import '../service/service_login.dart';
 import '../theme/theme_color.dart';
 import '../theme/theme_icon.dart';
-import '../tool_widget_custom/bottom_sheet_custom.dart';
 import '../tool_widget_custom/button_widget_custom.dart';
 import '../tool_widget_custom/input_custom.dart';
 import '../tool_widget_custom/popup_custom.dart';
@@ -28,87 +30,106 @@ class LoginController {
   final TextEditingController emailController = TextEditingController(text: 'thanhhaivc2002');
   final TextEditingController passController = TextEditingController(text: '123456');
   final firebaseAuth = FirebaseAuth.instance;
+  double scaleValue = 1.0;
 
-  void popupLogin() {
-    BottomSheetCustom.showCustomBottomSheet(context,
-      backgroundColor: ThemeColor.whiteIos.withOpacity(0.3),
-      Padding(
-        padding: EdgeInsets.symmetric(horizontal: 20.w),
-        child: SingleChildScrollView(
-          child: Column(
-            children: [
-              SizedBox(height: 100.h),
-              Row(
-                children: [
-                  Text('Login',
-                    style: TextStyle(
-                      color: ThemeColor.whiteColor,
-                      fontWeight: FontWeight.w800,
-                      fontSize: 30.sp
-                    ),
+  void popupLogin(setState) {
+    setState(()=>scaleValue = 1.1);
+    showCupertinoDialog(context: context, barrierDismissible: true,
+      builder: (context) {
+        return Center(
+        child: Material(
+          color: Colors.transparent,
+          child: TweenAnimationBuilder(
+            duration: const Duration(milliseconds: 300),
+            tween: Tween<double>(end: 30, begin: 0),
+            builder: (context, value, child) {
+              return BackdropFilter(
+                filter: ImageFilter.blur(sigmaY: value, sigmaX: value),
+                child: Padding(
+                  padding: EdgeInsets.all(20.w),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Row(
+                        children: [
+                          Text('Login', style: TextStyle(
+                            color: ThemeColor.whiteColor,
+                            fontWeight: FontWeight.w800,
+                            fontSize: 30.sp
+                          )),
+                          SizedBox(width: 10.w),
+                          Expanded(child: Divider(
+                            color: ThemeColor.whiteColor.withOpacity(0.5),
+                          ))
+                        ],
+                      ),
+                      SizedBox(height: 30.h),
+                      InputCustom(
+                        controller: emailController,
+                        colorInput: ThemeColor.blackColor.withOpacity(0.3),
+                        labelText: 'Email',
+                        colorText: ThemeColor.whiteColor,
+                        keyboardType: TextInputType.emailAddress,
+                      ),
+                      SizedBox(height: 20.h),
+                      InputCustom(
+                        controller: passController,
+                        hidePass: true,
+                        colorInput: ThemeColor.blackColor.withOpacity(0.3),
+                        labelText: 'passWord',
+                        colorText: ThemeColor.whiteColor,
+                        keyboardType: TextInputType.visiblePassword,
+                      ),
+                      SizedBox(height: 20.h),
+                      ButtonWidgetCustom(
+                          textButton: 'Login',
+                          height: 40.h,
+                          radius: 10.w,
+                          color: ThemeColor.pinkColor.withOpacity(0.6),
+                          styleText: TextStyle(
+                              color: ThemeColor.whiteColor,
+                              fontSize: 15.sp,
+                              fontWeight: FontWeight.bold
+                          ),
+                          onTap: ()=> login(emailController.text, passController.text)
+                      ),
+                      SizedBox(height: 20.w),
+                      Row(
+                        children: [
+                          Expanded(child: Divider(endIndent: 20.w, color: ThemeColor.whiteColor.withOpacity(0.5))),
+                          Text('or', style: TextStyles.defaultStyle.whiteText),
+                          Expanded(child: Divider(indent: 20.w, color: ThemeColor.whiteColor.withOpacity(0.5))),
+                        ],
+                      ),
+                      Row(
+                        children: [
+                          _or(
+                              title: 'Back',
+                              textColor: ThemeColor.blackColor,
+                              boxColor: ThemeColor.whiteColor,
+                              icon: const Icon(Icons.arrow_back_rounded),
+                              onTap: () => Navigator.pop(context)
+                          ),
+                          const Spacer(),
+                          _or(
+                              title: 'Google',
+                              textColor: ThemeColor.blackColor,
+                              boxColor: ThemeColor.whiteColor,
+                              icon: Image.asset(ThemeIcon.iconGoogle),
+                              onTap: () async => await loginWithGoogle()
+                          ),
+                        ],
+                      )
+                    ],
                   ),
-                  SizedBox(width: 10.w),
-                  Expanded(child: Divider(
-                    color: ThemeColor.whiteColor.withOpacity(0.5),
-                  ))
-                ],
-              ),
-              SizedBox(height: 30.h),
-              InputCustom(
-                controller: emailController,
-                colorInput: ThemeColor.blackColor.withOpacity(0.3),
-                labelText: 'Email',
-                colorText: ThemeColor.whiteColor,
-                keyboardType: TextInputType.emailAddress,
-              ),
-              SizedBox(height: 20.h),
-              InputCustom(
-                controller: passController,
-                hidePass: true,
-                colorInput: ThemeColor.blackColor.withOpacity(0.3),
-                labelText: 'passWord',
-                colorText: ThemeColor.whiteColor,
-                keyboardType: TextInputType.visiblePassword,
-              ),
-              SizedBox(height: 20.h),
-              ButtonWidgetCustom(
-                textButton: 'Login',
-                height: 40.h,
-                radius: 10.w,
-                color: ThemeColor.pinkColor.withOpacity(0.6),
-                styleText: TextStyle(
-                    color: ThemeColor.whiteColor,
-                    fontSize: 15.sp,
-                    fontWeight: FontWeight.bold
                 ),
-                onTap: ()=> login(emailController.text, passController.text)
-              ),
-              SizedBox(height: 20.h),
-              Row(
-                children: [
-                  Expanded(child: Divider(endIndent: 20.w, color: ThemeColor.whiteColor.withOpacity(0.5))),
-                  Text('or', style: TextStyles.defaultStyle.whiteText),
-                  Expanded(child: Divider(indent: 20.w, color: ThemeColor.whiteColor.withOpacity(0.5))),
-                ],
-              ),
-              _or(
-                title: 'Facebook',
-                textColor: ThemeColor.whiteColor,
-                boxColor: ThemeColor.blueColor,
-                icon: const Icon(Icons.facebook, color: ThemeColor.whiteColor)
-              ),
-              _or(
-                title: 'Google',
-                textColor: ThemeColor.blackColor,
-                boxColor: ThemeColor.whiteColor,
-                icon: Image.asset(ThemeIcon.iconGoogle),
-                onTap: () async => await loginWithGoogle()
-              ),
-            ],
+              );
+            }
           ),
         ),
-      )
-    );
+      );
+      }
+    ).whenComplete(()=> setState(()=> scaleValue = 1.0));
   }
 
   void login(String email, String password) async {
@@ -149,7 +170,7 @@ class LoginController {
   void onError(ModelInfoUser response) {
     PopupCustom.showPopup(context,
       content: Text('${response.message}'),
-      listOnPress: [()=> Navigator.pop(context)],
+      listOnPress: [(context)=> Navigator.pop(context)],
       listAction: [Text('Ok', style: TextStyles.defaultStyle.bold.setColor(ThemeColor.blueColor))]
     );
   }
@@ -203,7 +224,12 @@ class LoginController {
       accessToken: googleAuth?.accessToken,
     );
     await firebaseAuth.signInWithCredential(cred);
-    // print(firebaseAuth.currentUser?.email);
+    ModelInfoUser response = await serviceLogin.loginWithGoogle(firebaseAuth.currentUser?.email);
+    if(response.result == "Success") {
+      onSuccess(response);
+    } else {
+      onError(response);
+    }
   }
 
 }

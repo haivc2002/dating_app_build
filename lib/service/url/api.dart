@@ -11,6 +11,7 @@ class Api {
   static String sendMessage = 'http${ThemeConfig.baseUrlIp}message/send';
   static String createPayment = 'http${ThemeConfig.baseUrlIp}payment/create_payment_url';
   static String logout = 'http${ThemeConfig.baseUrlIp}auth/logout';
+  static String loginWithGoogle = 'http${ThemeConfig.baseUrlIp}auth/loginWithGoogle';
 
   // TODO: GET
   static String getNomination = 'http${ThemeConfig.baseUrlIp}data/listNomination';

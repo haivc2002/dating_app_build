@@ -29,7 +29,7 @@ class ServiceRegister {
       if(context.mounted) {
         PopupCustom.showPopup(context,
             content: Text('Error!', style: TextStyles.defaultStyle.setColor(ThemeColor.redColor)),
-            listOnPress: [()=>Navigator.pop(context)],
+            listOnPress: [(context)=>Navigator.pop(context)],
             listAction: [Text('Ok', style: TextStyles.defaultStyle.setColor(ThemeColor.blueColor))]
         );
       }
@@ -45,7 +45,7 @@ class ServiceRegister {
       if(context.mounted) {
         PopupCustom.showPopup(context,
           content: Text('Error!', style: TextStyles.defaultStyle.setColor(ThemeColor.redColor)),
-          listOnPress: [()=>Navigator.pop(context)],
+          listOnPress: [(context)=>Navigator.pop(context)],
           listAction: [Text('Ok', style: TextStyles.defaultStyle.setColor(ThemeColor.blueColor))]
         );
       }

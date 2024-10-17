@@ -1,7 +1,10 @@
 import 'dart:async';
 import 'dart:convert';
 
+import 'package:dating_build/common/textstyles.dart';
+import 'package:dating_build/model/model_response_list_pairing.dart';
 import 'package:dating_build/service/service_login.dart';
+import 'package:dating_build/tool_widget_custom/popup_custom.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:geolocator/geolocator.dart';
@@ -12,6 +15,7 @@ import 'package:web_socket_channel/web_socket_channel.dart';
 import '../bloc/bloc_all_tap/all_tap_bloc.dart';
 import '../bloc/bloc_all_tap/api_all_tap_bloc.dart';
 import '../bloc/bloc_auth/register_bloc.dart';
+import '../bloc/bloc_premium/premium_bloc.dart';
 import '../common/global.dart';
 import '../model/location_model/location_current_model.dart';
 import '../model/model_info_user.dart';
@@ -90,13 +94,33 @@ class AllTapController {
     print('Error!!!!!!');
   }
 
+  void _signOut(BuildContext context) async {
+    final response = await serviceLogin.logout(Global.getInt(ThemeConfig.idUser));
+    if(response.result == "success" && context.mounted) {
+      Global.setInt(ThemeConfig.idUser, -1);
+      final state = context.read<PremiumBloc>().state;
+      if(state is SuccessPremiumState) {
+        Navigator.pop(context);
+        List<Matches> match = List.from(state.resMatches ?? []);
+        match.clear();
+        context.read<PremiumBloc>().add(SuccessPremiumEvent(resMatches: match));
+        Navigator.pushNamedAndRemoveUntil(context, LoginScreen.routeName, (route) => false);
+      }
+    }
+  }
+
   void onSignOut() async {
-    // final response = await serviceLogin.logout(Global.getInt(ThemeConfig.idUser));
-    // if(response.result == "success" && context.mounted) {
-    //   Global.setInt(ThemeConfig.idUser, -1);
-    //   Navigator.pushNamedAndRemoveUntil(context, LoginScreen.routeName, (route) => false);
-    // }
-    Navigator.pushNamedAndRemoveUntil(context, LoginScreen.routeName, (route) => false);
+    PopupCustom.showPopup(context,
+      content: const Text("Please confirm that you are signed out?"),
+      listOnPress: [
+        (context)=> Navigator.pop(context),
+        (context)=> _signOut(context)
+      ],
+      listAction: [
+        Text('No', style: TextStyles.defaultStyle.setColor(Colors.red)),
+        Text('Yes', style: TextStyles.defaultStyle.setColor(Colors.blue)),
+      ]
+    );
   }
 
   Widget screenChange(AllTapState state, AnimationController animationController, BuildContext context, SwipableStackController swiController) {

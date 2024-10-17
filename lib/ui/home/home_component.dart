@@ -1,5 +1,6 @@
 import 'dart:ui';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -92,7 +93,6 @@ class HomeComponent {
   }
 }
 
-
 class BackGroundBlur extends StatefulWidget {
   final HomeState state;
   final BuildContext context;
@@ -104,22 +104,11 @@ class BackGroundBlur extends StatefulWidget {
 }
 
 class _BackGroundBlurState extends State<BackGroundBlur> {
-  bool _isOpaque = true;
-
   @override
   void didUpdateWidget(covariant BackGroundBlur oldWidget) {
     super.didUpdateWidget(oldWidget);
     if (oldWidget.state.currentIndex != widget.state.currentIndex) {
-      setState(() {
-        _isOpaque = false;
-      });
-      Future.delayed(const Duration(milliseconds: 200), () {
-        if (mounted) {
-          setState(() {
-            _isOpaque = true;
-          });
-        }
-      });
+      setState(() {});
     }
   }
 
@@ -127,36 +116,52 @@ class _BackGroundBlurState extends State<BackGroundBlur> {
   Widget build(BuildContext context) {
     var data = widget.state.listNomination?.nominations ?? [];
     final themeNotifier = Provider.of<ThemeNotifier>(context);
-    if (data.isNotEmpty && widget.state.currentIndex != null &&
-        widget.state.currentIndex! >= 0 && widget.state.currentIndex! < data.length) {
+
+    if (data.isNotEmpty &&
+        widget.state.currentIndex != null &&
+        widget.state.currentIndex! >= 0 &&
+        widget.state.currentIndex! < data.length) {
+
       var images = data[widget.state.currentIndex!].listImage ?? [];
 
       if (images.isNotEmpty) {
-        return Stack(
-          children: [
-            SizedBox(
+        return SizedBox(
+          height: heightScreen(context),
+          width: widthScreen(context),
+          child: AnimatedSwitcher(
+            duration: const Duration(milliseconds: 5000),
+            switchInCurve: Curves.ease,
+            switchOutCurve: Curves.easeOut,
+            child: SizedBox(
+              key: ValueKey<int>(widget.state.currentIndex!),
               height: heightScreen(context),
               width: widthScreen(context),
               child: ImageFiltered(
                 imageFilter: ImageFilter.blur(sigmaY: 30, sigmaX: 30),
-                child: Image.network('${images[0].image}', fit: BoxFit.cover),
+                child: _dataImageWidget(imageValue: images[0].image),
               ),
             ),
-            AnimatedContainer(
-              duration: const Duration(milliseconds: 800),
-              curve: Curves.fastEaseInToSlowEaseOut,
-              color: themeNotifier.systemThemeFade.withOpacity(_isOpaque ? 0.5 : 1.0),
-              height: heightScreen(context),
-              width: widthScreen(context),
-            ),
-          ],
+          ),
         );
       }
     }
     return const SizedBox();
   }
 
+  Widget _dataImageWidget({String? imageValue}) {
+    if(imageValue == null || imageValue == '') {
+      return const SizedBox();
+    } else {
+      return CachedNetworkImage(
+        imageUrl: imageValue,
+        progressIndicatorBuilder: (context, url, progress) => const SizedBox(),
+        errorWidget: (context, url, error) => const SizedBox(),
+        fit: BoxFit.cover,
+      );
+    }
+  }
 }
+
 
 
 

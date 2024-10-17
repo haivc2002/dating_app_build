@@ -71,8 +71,8 @@ class AccessPhotoGallery {
             Text('Yes', style: TextStyles.defaultStyle.setColor(ThemeColor.blueColor)),
           ],
           listOnPress: [
-                () {},
-                () async => await openAppSettings(),
+                (context) {},
+                (context) async => await openAppSettings(),
           ],
         );
       }
@@ -141,13 +141,8 @@ class AccessPhotoGallery {
           PopupCustom.showPopup(
             context,
             content: const Text('File null'),
-            listOnPress: [() => Navigator.pop(context)],
-            listAction: [
-              Text(
-                'Ok',
-                style: TextStyles.defaultStyle.setColor(ThemeColor.blueColor),
-              ),
-            ],
+            listOnPress: [(context) => Navigator.pop(context)],
+            listAction: [Text('Ok', style: TextStyles.defaultStyle.setColor(ThemeColor.blueColor))],
           );
         }
       }
@@ -166,7 +161,7 @@ class AccessPhotoGallery {
       PopupCustom.showPopup(
           context,
           content: const Text('Need at least 1 photo'),
-          listOnPress: [()=>Navigator.pop(context)], 
+          listOnPress: [(context)=>Navigator.pop(context)],
           listAction: [const Text('Ok', style: TextStyle(color: ThemeColor.blueColor))]
       );
     } else if (index < imageUpload.length) {
@@ -220,8 +215,8 @@ class AccessPhotoGallery {
         Text('Yes', style: TextStyles.defaultStyle.setColor(ThemeColor.blueColor)),
       ],
       listOnPress: [
-        () => Navigator.pop(context),
-        () async => await openAppSettings(),
+        (context) => Navigator.pop(context),
+        (context) async => await openAppSettings(),
       ],
     );
   }

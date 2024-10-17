@@ -2,6 +2,7 @@
 import 'dart:async';
 import 'dart:io';
 import 'dart:ui';
+import 'package:dating_build/controller/home_controller.dart';
 import 'package:dating_build/controller/profile_controller/update_model.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -87,8 +88,8 @@ class EditProfileController {
         Text('Yes', style: TextStyles.defaultStyle.setColor(ThemeColor.blueColor).bold),
       ],
       listOnPress: [
-        ()=>Navigator.pop(context),
-        ()=>activatedName(state, nameController.text),
+        (context)=>Navigator.pop(context),
+        (context)=>activatedName(state, nameController.text),
       ]
     );
   }
@@ -122,8 +123,8 @@ class EditProfileController {
         Text('Yes', style: TextStyles.defaultStyle.setColor(ThemeColor.blueColor).bold),
       ],
       listOnPress: [
-        ()=>Navigator.pop(context),
-        ()=>activatedWork(state, workController.text)
+        (context)=>Navigator.pop(context),
+        (context)=>activatedWork(state, workController.text)
       ]
     );
   }
@@ -154,8 +155,8 @@ class EditProfileController {
         Text('Yes', style: TextStyles.defaultStyle.setColor(ThemeColor.blueColor).bold),
       ],
       listOnPress: [
-        ()=>Navigator.pop(context),
-        ()=>activatedAbout(state, aboutController.text)
+        (context)=>Navigator.pop(context),
+        (context)=>activatedAbout(state, aboutController.text)
       ]
     );
   }
@@ -407,8 +408,10 @@ class EditProfileController {
   }
 
   void backAndUpdate(void Function(void Function()) setState) async {
+    HomeController home = HomeController(context);
     if(UpdateModel.modelInfoUser.idUser == null) {
-      Navigator.pop(context);
+      await home.getInfo();
+      if(context.mounted) Navigator.pop(context);
     } else {
       Stopwatch stopwatch = Stopwatch()..start();
       timer = Timer.periodic(const Duration(milliseconds: 10), (timer) {

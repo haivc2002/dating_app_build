@@ -37,6 +37,7 @@ import '../../ui/detail/detail_screen.dart';
 
 mixin PremiumBinding {
   BuildContext get context;
+
   ServiceMatch service = ServiceMatch();
   ServiceUpdate serviceUpdate = ServiceUpdate();
   ServicePayment servicePayment = ServicePayment();
@@ -361,7 +362,7 @@ mixin PremiumBinding {
         if(context.mounted) {
           PopupCustom.showPopup(context,
               content: const Text('The server is busy!'),
-              listOnPress: [()=> Navigator.pop(context)],
+              listOnPress: [(context)=> Navigator.pop(context)],
               listAction: [Text('Ok', style: TextStyles.defaultStyle.bold.setColor(ThemeColor.blueColor))]
           );
         }
@@ -406,7 +407,7 @@ mixin PremiumBinding {
           PopupCustom.showPopup(
             context,
             content: Text("Payment failed, you have not made payment", style: TextStyles.defaultStyle),
-            listOnPress: [()=> Navigator.pop(context)],
+            listOnPress: [(context)=> Navigator.pop(context)],
             listAction: [Text("Ok", style: TextStyles.defaultStyle.bold.setColor(ThemeColor.blueColor))]
           );
         }

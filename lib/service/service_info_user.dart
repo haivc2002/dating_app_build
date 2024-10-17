@@ -25,7 +25,7 @@ class ServiceInfoUser {
       if(context.mounted) {
         PopupCustom.showPopup(
           context,
-          listOnPress: [()=> Navigator.pop(context)],
+          listOnPress: [(context)=> Navigator.pop(context)],
           listAction: [Text('Ok', style: TextStyles.defaultStyle.bold.setColor(ThemeColor.blueColor))]
         );
       }

@@ -61,8 +61,8 @@ class ApiLocationCurrent {
         Text('Yes', style: TextStyles.defaultStyle.setColor(ThemeColor.blueColor).bold),
       ],
       listOnPress: [
-        ()=> Navigator.pop(context),
-        () async => await openAppSettings()
+        (context)=> Navigator.pop(context),
+        (context) async => await openAppSettings()
       ],
     );
   }

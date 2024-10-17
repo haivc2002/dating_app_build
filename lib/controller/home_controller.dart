@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:rive/rive.dart' as rive;
 import 'package:swipable_stack/swipable_stack.dart';
 
 import '../../common/global.dart';
@@ -29,8 +30,6 @@ import '../theme/theme_rive.dart';
 import '../tool_widget_custom/button_widget_custom.dart';
 import '../tool_widget_custom/popup_custom.dart';
 import '../ui/detail/detail_screen.dart';
-import 'package:rive/rive.dart' as rive;
-
 import '../ui/home/match_popup_screen.dart';
 
 class HomeController {
@@ -288,7 +287,7 @@ class HomeController {
       if(context.mounted) {
         PopupCustom.showPopup(context, 
             content: const Text('The server is busy!'),
-            listOnPress: [()=> Navigator.pop(context)],
+            listOnPress: [(context)=> null],
             listAction: [Text('Ok', style: TextStyles.defaultStyle.bold.setColor(ThemeColor.blueColor))]
         );
       }

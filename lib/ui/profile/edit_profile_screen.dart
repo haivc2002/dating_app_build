@@ -55,35 +55,38 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   @override
   Widget build(BuildContext context) {
     final themeNotifier = Provider.of<ThemeNotifier>(context);
-    return Scaffold(
-      backgroundColor: themeNotifier.systemTheme,
-      body: Stack(
-        children: [
-          AppBarCustom(
-            title: 'Edit profile',
-            textStyle: TextStyles.defaultStyle.bold.appbarTitle,
-            leadingIcon: IconButton(
-              onPressed: () => controller.backAndUpdate(setState),
-              icon: Icon(CupertinoIcons.back, color: themeNotifier.systemText),
+    return PopScope(
+      canPop: false,
+      child: Scaffold(
+        backgroundColor: themeNotifier.systemTheme,
+        body: Stack(
+          children: [
+            AppBarCustom(
+              title: 'Edit profile',
+              textStyle: TextStyles.defaultStyle.bold.appbarTitle,
+              leadingIcon: IconButton(
+                onPressed: () => controller.backAndUpdate(setState),
+                icon: Icon(CupertinoIcons.back, color: themeNotifier.systemText),
+              ),
+              bodyListWidget: [
+                BlocBuilder<HomeBloc, HomeState>(builder: (context, homeState) {
+                  if(homeState.info?.info?.name == null || homeState.info?.info?.name == '') {
+                    return _error();
+                  } else {
+                    return Column(
+                      children: [
+                        _boxImage(homeState.info!.listImage!),
+                        itemInfo(homeState),
+                        itemInfoMore(themeNotifier, homeState),
+                      ],
+                    );
+                  }
+                })
+              ],
             ),
-            bodyListWidget: [
-              BlocBuilder<HomeBloc, HomeState>(builder: (context, homeState) {
-                if(homeState.info?.info?.name == null || homeState.info?.info?.name == '') {
-                  return _error();
-                } else {
-                  return Column(
-                    children: [
-                      _boxImage(homeState.info!.listImage!),
-                      itemInfo(homeState),
-                      itemInfoMore(themeNotifier, homeState),
-                    ],
-                  );
-                }
-              })
-            ],
-          ),
-          _loadUpdate(themeNotifier)
-        ],
+            _loadUpdate(themeNotifier)
+          ],
+        ),
       ),
     );
   }

@@ -33,70 +33,75 @@ class _LoginScreenState extends State<LoginScreen> with TickerProviderStateMixin
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: ThemeColor.themeDarkSystem,
-      resizeToAvoidBottomInset: true,
-      body: Stack(
-        children: [
-          Container(
-            height: heightScreen(context),
-            width: widthScreen(context),
-            decoration: const BoxDecoration(
-              image: DecorationImage(
-                image: AssetImage(ThemeImage.backgroundLogin),
-                fit: BoxFit.cover
-              )
-            ),
-            child: SizedBox(
+    return AnimatedScale(
+      curve: Curves.fastEaseInToSlowEaseOut,
+      duration: const Duration(milliseconds: /*220*/1000),
+      scale: controller.scaleValue,
+      child: Scaffold(
+        backgroundColor: ThemeColor.themeDarkSystem,
+        resizeToAvoidBottomInset: true,
+        body: Stack(
+          children: [
+            Container(
               height: heightScreen(context),
               width: widthScreen(context),
-              child: DecoratedBox(
-                decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    colors: [ThemeColor.blackColor.withOpacity(0.4), ThemeColor.blackColor],
-                    begin: Alignment.topCenter,
-                    end: Alignment.bottomCenter
-                  )
+              decoration: const BoxDecoration(
+                image: DecorationImage(
+                  image: AssetImage(ThemeImage.backgroundLogin),
+                  fit: BoxFit.cover
+                )
+              ),
+              child: SizedBox(
+                height: heightScreen(context),
+                width: widthScreen(context),
+                child: DecoratedBox(
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      colors: [ThemeColor.blackColor.withOpacity(0.4), ThemeColor.blackColor],
+                      begin: Alignment.topCenter,
+                      end: Alignment.bottomCenter
+                    )
+                  ),
                 ),
               ),
             ),
-          ),
-          Padding(
-            padding: EdgeInsets.symmetric(horizontal: 20.w),
-            child: SingleChildScrollView(
-              physics: const NeverScrollableScrollPhysics(),
-              child: Column(
-                children: [
-                  SizedBox(height: heightScreen(context)*0.7),
-                  ButtonWidgetCustom(
-                    styleText: TextStyle(
-                        color: ThemeColor.blackColor.withOpacity(0.6),
-                        fontWeight: FontWeight.bold
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: 20.w),
+              child: SingleChildScrollView(
+                physics: const NeverScrollableScrollPhysics(),
+                child: Column(
+                  children: [
+                    SizedBox(height: heightScreen(context)*0.7),
+                    ButtonWidgetCustom(
+                      styleText: TextStyle(
+                          color: ThemeColor.blackColor.withOpacity(0.6),
+                          fontWeight: FontWeight.bold
+                      ),
+                      color: ThemeColor.whiteColor,
+                      radius: 100,
+                      textButton: 'I already have an account',
+                      height: 40.h,
+                      onTap: ()=> controller.popupLogin(setState)
                     ),
-                    color: ThemeColor.whiteColor,
-                    radius: 100,
-                    textButton: 'I already have an account',
-                    height: 40.h,
-                    onTap: ()=> controller.popupLogin()
-                  ),
-                  SizedBox(height: 20.h),
-                  ButtonWidgetCustom(
-                    styleText: const TextStyle(
-                        color: ThemeColor.whiteColor,
-                        fontWeight: FontWeight.bold
+                    SizedBox(height: 20.h),
+                    ButtonWidgetCustom(
+                      styleText: const TextStyle(
+                          color: ThemeColor.whiteColor,
+                          fontWeight: FontWeight.bold
+                      ),
+                      color: ThemeColor.pinkColor,
+                      radius: 100,
+                      textButton: 'Do not have an account?',
+                      height: 40.h,
+                      onTap: () => Navigator.pushNamed(context, RegisterScreen.routeName),
                     ),
-                    color: ThemeColor.pinkColor,
-                    radius: 100,
-                    textButton: 'Do not have an account?',
-                    height: 40.h,
-                    onTap: () => Navigator.pushNamed(context, RegisterScreen.routeName),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
-          ),
-        ],
-      )
+          ],
+        )
+      ),
     );
 
   }

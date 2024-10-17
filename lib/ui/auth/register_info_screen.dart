@@ -15,7 +15,7 @@ import '../../bloc/bloc_auth/register_bloc.dart';
 import '../../bloc/bloc_profile/edit_bloc.dart';
 import '../../common/scale_screen.dart';
 import '../../common/textstyles.dart';
-import '../../controller/register_more_controller.dart';
+import '../../controller/register/register_more_controller.dart';
 import '../../service/access_photo_gallery.dart';
 import '../../theme/theme_color.dart';
 import '../../theme/theme_image.dart';

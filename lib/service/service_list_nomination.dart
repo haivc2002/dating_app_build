@@ -27,7 +27,7 @@ class ServiceListNomination {
         PopupCustom.showPopup(
           context,
           content: const Text('The server is busy'),
-          listOnPress: [()=> Navigator.pop(context)],
+          listOnPress: [(context)=> Navigator.pop(context)],
           listAction: [Text('Ok', style: TextStyles.defaultStyle.bold.setColor(ThemeColor.blueColor))]
         );
       }

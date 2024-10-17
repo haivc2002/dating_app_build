@@ -184,7 +184,10 @@ class _ViewChatScreenState extends State<ViewChatScreen> {
 
   Widget _receiver(DetailMessageState state, int index) {
     final themeNotifier = Provider.of<ThemeNotifier>(context);
-    bool showAvt = state.response?[index+1].idUser != state.response?[index].idUser;
+    // bool showAvt = state.response?[index+1].idUser != state.response?[index].idUser;
+
+    bool showAvt = (index + 1 < (state.response?.length ?? 0)) &&
+        state.response?[index + 1].idUser != state.response?[index].idUser;
     return Row(
       children: [
         showAvt ? ClipRRect(

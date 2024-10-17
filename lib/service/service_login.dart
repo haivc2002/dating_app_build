@@ -9,6 +9,7 @@ import '../model/model_request_auth.dart';
 class ServiceLogin {
   String url = Api.login;
   String urlLogout = Api.logout;
+  String urlLoginWithGoogle = Api.loginWithGoogle;
 
   late Dio dio;
   ServiceLogin() {
@@ -29,6 +30,15 @@ class ServiceLogin {
 
   Future<ModelInfoUser> logout(int idUser) async {
     final request = await dio.post(urlLogout, data: {"idUser": idUser});
+    if(request.statusCode == 200) {
+      return ModelInfoUser.fromJson(request.data);
+    } else {
+      throw Exception('Failed to request Data');
+    }
+  }
+
+  Future<ModelInfoUser> loginWithGoogle(String? email) async {
+    final request = await dio.post(urlLoginWithGoogle, data: {"email": email});
     if(request.statusCode == 200) {
       return ModelInfoUser.fromJson(request.data);
     } else {

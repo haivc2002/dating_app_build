@@ -65,7 +65,7 @@ class RegisterController {
   void onError(String content) {
     PopupCustom.showPopup(context,
         content: Text(content, style: TextStyles.defaultStyle),
-        listOnPress: [()=>Navigator.pop(context)],
+        listOnPress: [(context)=>Navigator.pop(context)],
         listAction: [Text('Ok', style: TextStyles.defaultStyle.setColor(ThemeColor.blueColor).bold)]
     );
   }

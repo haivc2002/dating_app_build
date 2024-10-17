@@ -144,7 +144,7 @@ class _PremiumScreenState extends State<PremiumScreen> with WidgetsBindingObserv
                 children: [
                   Text("${state.resEnigmatic?[index].info?.name}, "
                       "${yearOld(state.resEnigmatic?[index].info?.birthday??"")}",
-                      style: TextStyles.defaultStyle.setColor(themeNotifier.systemText)
+                      style: TextStyles.defaultStyle.setColor(ThemeColor.whiteColor)
                       .bold.setTextSize(16)
                   ),
                   Text("${state.resEnigmatic?[index].info?.desiredState}",

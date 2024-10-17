@@ -1,5 +1,6 @@
 import 'dart:ui';
 
+import 'package:dating_build/controller/home_controller.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -101,14 +102,14 @@ class _DrawerWidgetState extends State<DrawerWidget> {
                             title: Text(TimeNow.helloDate(), style: TextStyles.defaultStyle.whiteText.setTextSize(16.sp)),
                             subtitle: Text('${state.info?.info?.name}', style: TextStyles
                                 .defaultStyle
-                                .setColor(themeNotifier.systemText)
+                                .setColor(ThemeColor.whiteColor)
                             ),
                             trailing: TimeNow.iconDate(),
                           );
                         }
                       }
                     ),
-                    itemDrawer(CupertinoIcons.profile_circled, 'Edit Personal information', () {Navigator.pushNamed(context, EditProfileScreen.routeName);}),
+                    itemDrawer(CupertinoIcons.profile_circled, 'Edit Personal information', ()=> Navigator.pushNamed(context, EditProfileScreen.routeName)),
                     itemDrawer(Icons.settings,'Setting', () async {
                       await Navigator.pushNamed(context, SettingScreen.routeName);
                       widget.onRefresh();

@@ -68,14 +68,16 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     SizedBox(height: 50.w),
                     Hero(tag: 'keyAVT',
                         child: ClipOval(
-                          child: CachedNetworkImage(
+                          child: (homeState.info?.listImage??[]).isNotEmpty ? CachedNetworkImage(
                             imageUrl: '${homeState.info?.listImage?[0].image}',
                             progressIndicatorBuilder: (context, url, progress) => const SizedBox(),
                             errorWidget: (context, url, error) => Image.asset(ThemeImage.avatarNone),
                             fit: BoxFit.cover,
                             height: 160.w,
                             width: 160.w,
-                          ),
+                          ) : Image.asset(ThemeImage.avatarNone, fit: BoxFit.cover,
+                            height: 160.w,
+                            width: 160.w,),
                         )
                     ),
                     Expanded(child: Center(
@@ -112,10 +114,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       ),
                       child: IconButton(
                         icon: const Icon(Icons.edit, color: ThemeColor.whiteColor),
-                        onPressed: () async {
-                          await Navigator.pushNamed(context, EditProfileScreen.routeName);
-                          controller.getInfo();
-                        },
+                        onPressed: ()=> Navigator.pushNamed(context, EditProfileScreen.routeName),
                       ),
                     )
                   ],
